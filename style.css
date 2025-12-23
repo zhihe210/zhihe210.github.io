@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿/* 全局样式 */
+﻿/* 全局样式 */
 * {
     margin: 0;
     padding: 0;
@@ -49,10 +49,6 @@ h1, h2, h3, h4 {
 }
 .status h4 {
     font-size: 1.2rem;
-}
-.status .debuff {
-    font-size: 1.1rem;
-    font-weight: bold;
 }
 h1 {
     font-size: 3.5rem;
@@ -273,29 +269,35 @@ button:active {
     font-size: 1.1rem;
     font-weight: bold;
 }
-/* 定身debuff样式 */
-.debuff-freeze {
+/* 定身buff样式 */
+.buff-freeze {
     background-color: rgba(33, 150, 243, 0.2);
     border: 1px solid #2196f3;
     color: #1976d2;
 }
-/* 操作反向debuff样式 */
-.debuff-reverse {
+/* 操作反向buff样式 */
+.buff-reverse {
     background-color: rgba(156, 39, 176, 0.2);
-    border: 1px solid #9c27b0;
-    color: #7b1fa2;
+    border: 1px solid #7e208e;
+    color: #af29e9;
 }
-/* 防护盾buff样式） */
-.debuff-shield {
-    background-color: rgba(76, 175, 80, 0.2);
-    border: 1px solid #4caf50;
-    color: #388e3c;
+/* 防护盾buff样式 */
+.buff-shield {
+    background-color: rgba(0, 188, 212, 0.2);
+    border: 1px solid #00bcd4;
+    color: #00acc1;
 }
-/* 陷阱探测器buff样式） */
-.debuff-trapDetector {
+/* 陷阱探测器buff样式 */
+.buff-trapDetector {
     background-color: rgba(89, 72, 16, 0.2);
     border: 1px solid #9c9c1f;
     color: #bfc71f;
+}
+/* 风扇buff样式 */
+.buff-fan {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 1px solid #4caf50;
+    color: #5adc61;
 }
 .game-message {
     position: absolute;
