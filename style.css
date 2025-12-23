@@ -1,0 +1,854 @@
+﻿﻿﻿﻿﻿﻿/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'SimSun', '宋体', serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+    overflow: hidden;
+}
+/* 游戏容器 */
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+/* 屏幕通用样式 */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+.hidden {
+    display: none;
+}
+.overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+}
+/* 标题样式 */
+h1, h2, h3, h4 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+}
+/* 状态栏文字样式 */
+.status h3 {
+    font-size: 1.5rem;
+}
+.status h4 {
+    font-size: 1.2rem;
+}
+.status .debuff {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 40px;
+}
+h2 {
+    font-size: 2.5rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+/* 按钮样式 */
+button {
+    background-color: #16213e;
+    color: #ffffff;
+    border: 2px solid #ffd700;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+button:hover {
+    background-color: #0f3460;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+/* 开始界面 */
+#start-screen {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 1000;
+}
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.menu-buttons button {
+    min-width: 200px;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+}
+/* 难度选择界面 */
+#difficulty-screen {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.difficulty-options {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+.difficulty-btn {
+    min-width: 150px;
+    font-size: 1.3rem;
+    padding: 18px 35px;
+}
+#easy-mode {
+    border-color: #4caf50;
+}
+#easy-mode:hover {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+#hard-mode {
+    border-color: #f44336;
+}
+#hard-mode:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+}
+/* 游戏界面 */
+#game-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+    background-image: url('images/game_background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/* 排行榜界面 */
+#leaderboard-screen {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+/* 排名界面 */
+#ranking-screen {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+/* 说明界面 */
+#instructions-screen {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+/* 游戏结束界面 */
+#game-over-screen {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+/* 设置界面 */
+#settings-screen {
+    background-size: cover;
+    background-position: center;
+}
+#settings-screen.menu-background {
+    background-image: url('images/background.jpg');
+}
+#settings-screen.game-background {
+    background-image: url('images/game_background.jpg');
+}
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #16213e;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.game-info {
+    display: flex;
+    gap: 30px;
+    font-size: 1.2rem;
+}
+.game-controls {
+    display: flex;
+    gap: 10px;
+    font-family: 'SimSun', '宋体', serif;
+}
+.game-main {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    overflow: hidden;
+}
+.maze-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a2e;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+#maze-canvas {
+    border: 3px solid #ffd700;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+.game-sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.inventory {
+    background-color: #16213e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+#inventory-slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.inventory-slot {
+    width: 70px;
+    height: 70px;
+    background-color: #0f3460;
+    border: 2px solid #ffd700;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.inventory-slot:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+.inventory-slot.has-item {
+    background-color: #1a1a2e;
+}
+.status {
+    background-color: #16213e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    flex: 1;
+}
+.buffs {
+    margin-top: 15px;
+}
+.buff {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+/* 定身debuff样式 */
+.debuff-freeze {
+    background-color: rgba(33, 150, 243, 0.2);
+    border: 1px solid #2196f3;
+    color: #1976d2;
+}
+/* 操作反向debuff样式 */
+.debuff-reverse {
+    background-color: rgba(156, 39, 176, 0.2);
+    border: 1px solid #9c27b0;
+    color: #7b1fa2;
+}
+/* 防护盾buff样式） */
+.debuff-shield {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 1px solid #4caf50;
+    color: #388e3c;
+}
+/* 陷阱探测器buff样式） */
+.debuff-trapDetector {
+    background-color: rgba(89, 72, 16, 0.2);
+    border: 1px solid #9c9c1f;
+    color: #bfc71f;
+}
+.game-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+}
+#message-text {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffd700;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 2rem;
+    font-weight: bold;
+    display: none;
+    animation: fadeInOut 5s ease;
+}
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.8); }
+    20% { opacity: 1; transform: scale(1); }
+    80% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.2); }
+}
+/* 商店界面 */
+.shop-content {
+    background-color: #16213e;
+    padding: 30px;
+    border-radius: 15px;
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    width: 80%;
+    max-width: 900px;
+}
+.shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.shop-gold {
+    font-size: 1.5rem;
+    color: #ffd700;
+    font-weight: bold;
+}
+.close-btn {
+    font-size: 2rem;
+    padding: 5px 15px;
+    line-height: 1;
+    border-radius: 50%;
+    background-color: #f44336;
+    border-color: #f44336;
+}
+.close-btn:hover {
+    background-color: #d32f2f;
+}
+#shop-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+.shop-item {
+    background-color: #1a1a2e;
+    border: 2px solid #0f3460;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.shop-item:hover {
+    border-color: #ffd700;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+.shop-item.sold-out {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.shop-item.sold-out:hover {
+    transform: none;
+    box-shadow: none;
+}
+.shop-item.purchased {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.shop-item.purchased:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: #0f3460;
+}
+.buy-btn:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+.item-name {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+}
+.item-description {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    height: 60px;
+    overflow-y: auto;
+}
+.item-price {
+    color: #ffd700;
+    font-weight: bold;
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+}
+/* 打折商品样式 */
+.shop-item.discounted {
+    border-color: #4caf50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+.original-price {
+    text-decoration: line-through;
+    color: #ff4444;
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+.discounted-price {
+    color: #4caf50;
+    font-size: 1.4rem;
+}
+.buy-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+.refresh-btn {
+    background-color: #ff9800;
+    border-color: #ff9800;
+}
+.refresh-btn:hover {
+    background-color: #f57c00;
+}
+/* 此山是我开选择界面 */
+#bandit-choice-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.bandit-choice-content {
+    background-color: #16213e;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    max-width: 500px;
+    width: 100%;
+}
+.bandit-choice-content h2 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+.bandit-choice-content p {
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+}
+#bandit-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.bandit-option {
+    background-color: #0f3460;
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.bandit-option:hover {
+    background-color: #1a472a;
+    transform: scale(1.05);
+}
+/* 问题宝箱选择界面 */
+#question-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.question-content {
+    background-color: #16213e;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    max-width: 500px;
+    width: 100%;
+}
+/* 设置界面 */
+.settings-options {
+    background-color: #16213e;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #0f3460;
+    border-radius: 10px;
+    border: 2px solid #ffd700;
+}
+.setting-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+.toggle-btn {
+    padding: 10px 35px;
+    font-size: 1.1rem;
+    background-color: #16213e;
+    color: #ffffff;
+    border: 2px solid #ffd700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.toggle-btn:hover {
+    background-color: #0f3460;
+    transform: translateY(-2px);
+}
+.toggle-btn.off {
+    background-color: #555;
+    border-color: #888;
+}
+.question-content h2 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+#question-text {
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px;
+    background-color: #0f3460;
+    border-radius: 10px;
+    border: 2px solid #ffd700;
+}
+#question-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.question-option {
+    background-color: #0f3460;
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+.question-option:hover {
+    background-color: #1a472a;
+    transform: scale(1.05);
+}
+.question-option.correct {
+    background-color: #2e7d32;
+    border-color: #4caf50;
+}
+.question-option.wrong {
+    background-color: #c62828;
+    border-color: #f44336;
+}
+.bandit-option:hover {
+    background-color: #1a1a2e;
+    border-color: #ff4444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.bandit-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.bandit-option.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: #ffd700;
+}
+/* 排行榜界面 */
+.leaderboard-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+.leaderboard-section {
+    width: 45%;
+    min-width: 300px;
+    margin-bottom: 20px;
+}
+.leaderboard-section h3 {
+    color: #e94560;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 2px solid #e94560;
+    padding-bottom: 5px;
+}
+.leaderboard-list {
+    width: 100%;
+    background-color: #16213e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+/* 对局记录样式 */
+#match-history-list {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #16213e;
+    border-radius: 10px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-height: 500px; /* 限制最大高度，避免过长 */
+}
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-weight: bold;
+    background-color: #16213e;
+    color: #e94560;
+    border-bottom: 2px solid #e94560;
+}
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid #0f3460;
+}
+.leaderboard-entry:last-child {
+    border-bottom: none;
+}
+.leaderboard-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.leaderboard-entry.easy-mode {
+    background-color: rgba(128, 128, 128, 0.1); /* 灰色背景 */
+}
+.leaderboard-entry.hard-mode {
+    background-color: rgba(0, 0, 255, 0.1); /* 蓝色背景 */
+}
+/* 操作说明界面 */
+.instructions-content {
+    background-color: #16213e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    margin-bottom: 20px;
+    min-height: 400px;
+    position: relative;
+}
+.instructions-page {
+    display: none;
+}
+.instructions-page.active {
+    display: block;
+}
+.instructions-content h3 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #4caf50;
+    font-size: 1.5rem; /* 增大标题字体 */
+}
+.instructions-content p {
+    margin: 12px 0;
+    line-height: 1.8;
+    font-size: 1.1rem; /* 增大正文字体 */
+}
+/* 翻页控制 */
+.page-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.page-btn {
+    padding: 8px 16px;
+    font-size: 1rem;
+    background-color: #0f3460;
+    border-color: #0f3460;
+}
+.page-btn:hover {
+    background-color: #0f3460;
+    border-color: #ffd700;
+}
+.page-btn:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    border-color: #cccccc;
+}
+.page-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+#page-indicator {
+    font-size: 1.1rem;
+    color: #ffd700;
+    font-weight: bold;
+}
+/* 游戏结束界面 */
+.game-over-content {
+    background-color: #16213e;
+    padding: 40px;
+    border-radius: 15px;
+    border: 3px solid #f44336;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(244, 67, 54, 0.3);
+}
+/* 暂停界面 */
+.pause-content {
+    background-color: #16213e;
+    padding: 40px;
+    border-radius: 15px;
+    border: 3px solid #4caf50;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.3);
+}
+.resume-btn {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    font-size: 1.3rem;
+    padding: 18px 35px;
+    margin-top: 20px;
+}
+.resume-btn:hover {
+    background-color: #45a049;
+}
+.game-over-stats {
+    margin: 30px 0;
+    font-size: 1.5rem;
+}
+.game-over-stats div {
+    margin: 15px 0;
+}
+.restart-btn {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    font-size: 1.3rem;
+    padding: 18px 35px;
+}
+.restart-btn:hover {
+    background-color: #45a049;
+}
+.quit-btn {
+    background-color: #f44336;
+    border-color: #f44336;
+    font-size: 1.3rem;
+    padding: 18px 35px;
+}
+.quit-btn:hover {
+    background-color: #d32f2f;
+}
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .game-main {
+        flex-direction: column;
+    }
+    .game-sidebar {
+        width: 100%;
+        flex-direction: row;
+    }
+    .inventory, .status {
+        flex: 1;
+    }
+}
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    h2 {
+        font-size: 2rem;
+    }
+    .game-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .game-info {
+        gap: 20px;
+        font-size: 1rem;
+    }
+    .game-sidebar {
+        flex-direction: column;
+    }
+    #inventory-slots {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    .inventory-slot {
+        width: 60px;
+        height: 60px;
+        font-size: 0.8rem;
+    }
+    .difficulty-options {
+        flex-direction: column;
+        gap: 15px;
+    }
+    #shop-items {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+@media (max-width: 480px) {
+    #game-screen {
+        padding: 10px;
+    }
+    .game-header {
+        padding: 10px;
+    }
+    .game-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    .maze-container {
+        padding: 10px;
+    }
+    #maze-canvas {
+        width: 100%;
+        height: 600px;
+        object-fit: contain;
+    }
+}

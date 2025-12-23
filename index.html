@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>逃离迷宫</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        /* 开始界面 */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            z-index: 1000;
+        }
+        h1 {
+            color: #ffd700;
+            font-size: 3.5rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button {
+            background-color: #16213e;
+            color: #ffffff;
+            border: 2px solid #ffd700;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            background-color: #0f3460;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        /* 其他页面的样式保持不变 */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="start-screen" class="screen">
+        <h1>逃离迷宫</h1>
+        <div class="menu-buttons">
+            <button id="start-game">开始游戏</button>
+            <button id="settings">设置</button>
+            <button id="leaderboard">排行榜</button>
+            <button id="record">对局记录</button>
+            <button id="instructions">操作说明</button>
+        </div>
+    </div>
+    <div id="game-container" tabindex="0">
+        <div id="difficulty-screen" class="screen hidden">
+            <h2>选择难度</h2>
+            <div class="difficulty-options">
+                <button id="easy-mode" class="difficulty-btn">简单模式</button>
+                <button id="hard-mode" class="difficulty-btn">困难模式</button>
+            </div>
+            <button id="back-to-start" class="back-btn">返回</button>
+        </div>
+        <!-- 游戏界面 -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="game-info">
+                    <div class="lives">生命值: <span id="lives-count">5</span></div>
+                    <div class="gold">金币: <span id="gold-count">10</span></div>
+                    <div class="monsters">怪物: <span id="monsters-count">0</span></div>
+                    <div class="time">时间: <span id="game-time">00:00</span></div>
+                </div>
+                <div class="game-controls">
+                <button id="pause-game">暂停(空格)</button>
+                <button id="open-shop">商店 (H)</button>
+                <button id="open-settings">设置</button>
+                <button id="restart-game-in-game">重新开始</button>
+                <button id="back-to-menu">返回菜单 (Esc)</button>
+            </div>
+            </div>
+            <div class="game-main">
+                <div class="maze-container">
+                    <canvas id="maze-canvas" width="800" height="600" tabindex="0"></canvas>
+                </div>
+                <div class="game-sidebar">
+                    <div class="inventory">
+                        <h3>背包栏</h3>
+                        <div id="inventory-slots">
+                        </div>
+                    </div>
+                    <div class="status">
+                        <h3>状态栏</h3>
+                        <div class="buffs">
+                            <div id="buff-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-message">
+                <div id="message-text"></div>
+            </div>
+        </div>
+        <!-- 商店界面 -->
+        <div id="shop-screen" class="screen hidden overlay">
+            <div class="shop-content">
+                <div class="shop-header">
+                    <h2>商店</h2>
+                    <div class="shop-gold">金币: <span id="shop-gold">10</span></div>
+                    <button id="close-shop" class="close-btn">×</button>
+                </div>
+                <div id="shop-items">
+                </div>
+                <button id="refresh-shop" class="refresh-btn">刷新物品(花费1金币)</button>
+            </div>
+        </div>
+        <!-- 此山是我开选择界面 -->
+        <div id="bandit-choice-screen" class="screen hidden overlay">
+            <div class="bandit-choice-content">
+                <h2>此山是我开！</h2>
+                <p>留下买路财！选择一种交易：</p>
+                <div id="bandit-options">
+                </div>
+            </div>
+        </div>
+        <!-- 问题宝箱窗口 -->
+        <div id="question-screen" class="screen hidden overlay">
+            <div class="question-content">
+                <h2>问答时间！</h2>
+                <div id="question-text"></div>
+                <div id="question-options">
+                </div>
+            </div>
+        </div>
+        <!-- 对局记录界面 -->
+        <div id="leaderboard-screen" class="screen hidden">
+            <h2>对局记录</h2>
+            <div id="match-history-list" class="leaderboard-list">
+            </div>
+            <div class="leaderboard-actions">
+                <button id="back-from-leaderboard" class="back-btn">杩斿洖</button>
+            </div>
+        </div>
+        <!-- 排行榜界面 -->
+        <div id="ranking-screen" class="screen hidden">
+            <h2>排行榜</h2>
+            <div class="leaderboard-container">
+                <div class="leaderboard-section">
+                    <h3>简单模式</h3>
+                    <div id="easy-leaderboard" class="leaderboard-list">
+                    </div>
+                </div>
+                <div class="leaderboard-section">
+                    <h3>困难模式</h3>
+                    <div id="hard-leaderboard" class="leaderboard-list">
+                    </div>
+                </div>
+            </div>
+            <div class="leaderboard-actions">
+                <button id="back-from-ranking" class="back-btn">杩斿洖</button>
+            </div>
+        </div>
+        <!-- 操作说明界面 -->
+        <div id="instructions-screen" class="screen hidden">
+            <h2>操作说明</h2>
+            <div class="instructions-content">
+                <!-- 第1页：基本操作 -->
+                <div class="instructions-page active" id="page1">
+                    <h3>基本操作</h3>
+                    <p>使用方向键或WASD移动角色</p>
+                    <p>点击背包或键盘1-6使用道具</p>
+                    <p>按H键打开商店</p>
+                    <p>按空格键暂停/继续游戏</p>
+                    <h3>游戏目标</h3>
+                    <p>1. 寻找出口逃离迷宫</p>
+                    <p>2. 收集金币和道具</p>
+                    <p>3. 避开陷阱和怪物</p>
+                </div>
+                <!-- 第2页：难度模式说明 -->
+                <div class="instructions-page" id="page2">
+                    <h3>难度模式说明</h3>
+                    <p><strong>简单模式</strong>：初始生命值5，初始金币10，陷阱4个</p>
+                    <p>金币箱8个，怪物6个，初始道具2个</p>
+                     <p></p>
+                    <p><strong>困难模式</strong>：初始生命值3，初始金币5，陷阱10个</p>
+                    <p>金币箱8个，怪物8个，初始道具1个</p>
+                </div>
+                <!-- 第3页：道具说明 -->
+                <div class="instructions-page" id="page3">
+                    <h3>道具说明</h3>
+                    <p><strong>1. 炸药</strong>：炸开小范围墙壁并消除范围内陷阱</p>
+                    <p><strong>2. 防护盾</strong>：提供30秒防护，可抵消攻击</p>
+                    <p><strong>3. 定身符</strong>：使怪物定身4秒</p>
+                    <p><strong>4. 回魂药水</strong>：恢复1条命</p>
+                    <p><strong>5. 斩妖剑</strong>：杀死离你最近的一个怪物</p>
+                </div>
+                  <!-- 第4页：-->
+                <div class="instructions-page" id="page4">  
+                    <h3>道具说明</h3>  
+                    <p><strong>6. 牛奶</strong>：解除所有负面状态</p>
+                    <p><strong>7. 传送卷轴</strong>：传送至随机位置</p>
+                    <p><strong>8. 时停怀表</strong>：停止计时器4秒</p>
+                    <p><strong>9. 陷阱探测器</strong>：显示所有陷阱，持续20秒</p>
+                    <p><strong>10. 风扇</strong>：吹散迷雾，使迷雾消失15秒</p>
+                </div>
+                   <!-- 第5页：陷阱说明 -->
+                <div class="instructions-page" id="page5">
+                    <h3>陷阱说明</h3>
+                    <p><strong>1. 定身陷阱</strong>：定身4秒，青色边框</p>
+                    <p><strong>2. 操作反向</strong>：操作方向相反，持续20秒，黑色边框</p>
+                    <p><strong>3. 重置</strong>：回到起点，粉色边框</p>
+                    <p><strong>4. 此山是我开</strong>：选择失去随机道具、金币或生命值，紫色边框</p>
+                    <p><strong>5. 致命陷阱</strong>：失去一条命，红色边框</p>
+                    <p><strong>6. 怪物陷阱</strong>：生成一只怪，橙色边框</p>
+                </div>
+                <!-- 第6页：宝箱说明 -->
+                <div class="instructions-page" id="page6">
+                    <h3>宝箱说明</h3>
+                    <p><strong>1. 勇气的嘉奖</strong>：随机获得随机金币或道具</p>
+                    <p><strong>2. 快问快答</strong>：回答问题，正确获得道具，错误则失去</p>
+                    <p><strong>3. 这也能歪？</strong>： 扣除一条命</p>
+                    <p><strong>4. 注意事项</strong>：宝箱不总是好东西哦</p>
+                </div>
+            </div>
+            <!-- 翻页按钮 -->
+            <div class="page-controls">
+                <button id="prev-page" class="page-btn" disabled>上一页</button>
+                <span id="page-indicator">1/5</span>
+                <button id="next-page" class="page-btn">下一页</button>
+            </div>
+            <button id="back-from-instructions" class="back-btn">返回</button>
+        </div>
+        <!-- 设置界面 -->
+        <div id="settings-screen" class="screen hidden">
+            <h2>设置</h2>
+            <div class="settings-options">
+            <div class="setting-item">
+                <span class="setting-label">音效开关</span>
+                <button id="sound-effects-toggle" class="toggle-btn"><span id="sound-status">开</span></button>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">音乐开关</span>
+                <button id="music-toggle" class="toggle-btn"><span id="music-status">开</span></button>
+            </div>
+        </div>
+            <button id="back-from-settings" class="back-btn">返回</button>
+        </div>
+        <!-- 游戏结束界面 -->
+        <div id="game-over-screen" class="screen hidden overlay">
+            <div class="game-over-content">
+                <h2>游戏结束</h2>
+                <div class="game-over-stats">
+                    <div>通关时间: <span id="final-time">00:00</span></div>
+                    <div>获得金币: <span id="final-gold">0</span></div>
+                    <div>被怪物攻击次数: <span id="final-monster-hits">0</span></div>
+                </div>
+                <button id="restart-game" class="restart-btn">重新开始</button>
+                <button id="quit-to-start" class="quit-btn">返回开始</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js?version=3.7"></script>
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            // 在页面上显示错误信息
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background-color: #ff0000;
+                color: #ffffff;
+                padding: 10px;
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            `;
+            errorDiv.innerHTML = `
+                <strong>JavaScript错误:</strong> ${message}<br>
+                <small>位置: ${source ? source : '未知位置'}:${lineno}:${colno}</small>
+                ${error ? `<br><small>堆栈: ${error.stack}</small>` : ''}
+            `;
+            document.body.appendChild(errorDiv);
+            return false;
+        };
+        // 添加Promise错误处理
+        window.onunhandledrejection = function(event) {
+            // 在页面上显示错误信息
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background-color: #ff0000;
+                color: #ffffff;
+                padding: 10px;
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            `;
+            errorDiv.innerHTML = `
+                <strong>Promise错误:</strong> ${event.reason ? event.reason.message : '未知错误'}<br>
+                <small>类型: ${event.reason ? event.reason.name : 'UnhandledPromiseRejection'}</small>
+                ${event.reason ? `<br><small>堆栈: ${event.reason.stack}</small>` : ''}
+            `;
+            document.body.appendChild(errorDiv);
+        };
+    </script>
+</body>
+</html>
