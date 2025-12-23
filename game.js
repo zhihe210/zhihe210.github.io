@@ -1,4 +1,4 @@
-﻿let currentScreen = 'start'; // 当前游戏界面
+let currentScreen = 'start'; // 当前游戏界面
 let isGameOver = false; // 游戏结束标志位，防止endGame重复调用
 let previousScreenBeforeSettings = 'start'; // 进入设置界面之前的屏幕
 let gameMode = 'easy'; // 当前游戏难度
@@ -34,7 +34,8 @@ let images = {// 图片资源
     player: null,
     monster: null,
     chest: null,
-    trap: null
+    trap: null,
+    fog: null
 };
 let imagesLoaded = false;// 图片加载状态
 let audioLoaded = false;// 音频加载状态
@@ -857,28 +858,41 @@ function handleMonsterCollision(monster) {// 处理怪物碰撞
 // ---------------------------- 图片音乐系统 ----------------------------
 function loadImages() {// 加载图片资源
     let loadedCount = 0;
+    let errorCount = 0;
     const totalImages = Object.keys(images).length;
     function onImageLoaded() {
         loadedCount++;
-        if (loadedCount === totalImages) {
+        if (loadedCount + errorCount === totalImages) {
+            imagesLoaded = true;
+        }
+    }
+    function onImageError(e) {
+        errorCount++;
+        console.error('图片加载失败:', e.target.src);
+        if (loadedCount + errorCount === totalImages) {
             imagesLoaded = true;
         }
     }
     images.player = new Image();
     images.player.src = 'images/player.png';
     images.player.onload = onImageLoaded;
+    images.player.onerror = onImageError;
     images.monster = new Image();
     images.monster.src = 'images/monster.png';
     images.monster.onload = onImageLoaded;
+    images.monster.onerror = onImageError;
     images.chest = new Image();
     images.chest.src = 'images/chest.png';
     images.chest.onload = onImageLoaded;
+    images.chest.onerror = onImageError;
     images.trap = new Image();
     images.trap.src = 'images/trap.png';
     images.trap.onload = onImageLoaded;
+    images.trap.onerror = onImageError;
     images.fog = new Image();
     images.fog.src = 'images/fog.jpg';
     images.fog.onload = onImageLoaded;
+    images.fog.onerror = onImageError;
 }
 function loadAudio() {// 加载音频
     try {
