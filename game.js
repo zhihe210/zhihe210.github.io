@@ -897,7 +897,7 @@ function loadImages() {// 加载图片资源
 function loadAudio() {// 加载音频
     try {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        music = new Audio('audio/bg_music.mp3');  // 加载背景音乐
+        music = new Audio('audio/background_music.mp3');  // 加载背景音乐
         music.loop = true; // 设置循环播放
         music.volume = musicVolume;
         music.muted = !soundEnabled;
